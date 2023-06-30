@@ -1,3 +1,17 @@
+{% comment %} We added this check to find from where user come and change the LOGO, Display None some fields and all that {% endcomment %}
+  {% assign hasPawPatrolStoreFrontRequest = false %}
+  {% for attribute in checkout.attributes %}
+    {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
+      {% assign hasPawPatrolStoreFrontRequest = true %}
+    {% endif %} 
+  {% endfor %}
+{% comment %} END {% endcomment %}
+
+{% if hasPawPatrolStoreFrontRequest %}
+  {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/1vEp5ukuVUlmYvQJO7eBW7/171bdcd868b3f8270583fe123cbb32b1/Logo.svg' %}
+  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com' %}
+{% endif %}
+    
 <!DOCTYPE html>
 <html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
   <head>
@@ -14,22 +28,82 @@
     {{ checkout_scripts }}
 
     <script src="{{ 'jquery.min.js' | asset_url }}"></script>
+    {% if hasPawPatrolStoreFrontRequest %}
+       {{ 'paw-patrol-style.css' | asset_url | stylesheet_tag }}
+       <script>
+         (function($) {
+            $(document).on("page:load page:change", function() {
+               const element = $("#checkout_shipping_address_country").closest('div').find('label');
+               const textToReplace = element.text();
+               const newText = textToReplace.replace("/", " / ");
+               element.text(newText); 
+               
+               $("#checkout_remember_me").closest('.field--show-floating-label').hide();
+               $("#checkout_buyer_accepts_marketing").closest('div').next('label').text('Keep me up to date on news and exclusive offers');
+    
+               var $element = $('main .step');
+               var dataValue = $element.data('step');
+      
+               if (dataValue === 'thank_you') {
+                $element.addClass('step-thank-you');
+                $(".section:first form").hide();
+                $(".content-box:first, .step__footer").hide();
+                $("#main-header").after('<span class="main_header_cus_text">You’ll receive a confirmation email with your order number shortly.</span>')
+                $(".step__footer").after('<div class="thankyou_step__footer"><p class="step__footer__info step__footer_thankyou"><a class="need-help" data-contact-us-link="true" href="mailto:MichaelD@spinmaster.com">Need help?</a></p><a href="{{ pawPatrolSiteLink }}/shop" class="btn">Continue shopping</></div>')
+                
+                const targetElement = $('h2').filter(function() {
+                  return $.trim($(this).text()) === 'Order details';
+                });
+                
+                const repText = targetElement.text().replace('Order details', 'Customer information');
+                targetElement.text(repText);
+                 
+               } else {
+                $element.removeClass('step-thank-you');
+                $(".section:first form").show();
+                $(".content-box:first, .step__footer").show();
+                $(".main_header_cus_text, .thankyou_step__footer").remove();
+               }
+            });
+          })(Checkout.$);
+         
+       </script>
+    {% endif %}
+  
   </head>
   <body>
     {{ skip_to_content_link }}
-
+    
+    {% if hasPawPatrolStoreFrontRequest %}
+       <input type="hidden" id="storefrontReq" name="storefront_req" value="true"> 
+     {% else %}
+       <input type="hidden" id="storefrontReq" name="storefront_req" value="false"> 
+     {% endif %}
+        
     <header class="banner" data-header role="banner">
       <div class="wrap">
-        {{ content_for_logo }}
+        {% if hasPawPatrolStoreFrontRequest %}
+              <a href="{{ pawPatrolSiteLink }}" class="logo logo--left paw--logo paw--logo-wrap">
+                <img alt="SM-Teststore2" class="logo__image logo__image--large" src="{{ pawPatrolLogo }}">
+              </a>
+              {% else %}
+              {{ content_for_logo }}
+            {% endif %}
       </div>
     </header>
-
+    
     {{ order_summary_toggle }}
     <div class="content" data-content>
       <div class="wrap">
-        <div class="main">
+        <div class="main {% if hasPawPatrolStoreFrontRequest %} paw-patrol-main {% endif %}">
           <header class="main__header" role="banner">
-            {{ content_for_logo }}
+            {% if hasPawPatrolStoreFrontRequest %}
+              <a class="logo logo--left paw--logo paw--logo-main" href="{{ pawPatrolSiteLink }}">
+                <img alt="SM-Teststore2" class="logo__image logo__image--large" src="{{ pawPatrolLogo }}">
+              </a> 
+              {% else %}
+              {{ content_for_logo }}
+            {% endif %} 
             {{ breadcrumb }}
             {{ alternative_payment_methods }}
           </header>
@@ -47,13 +121,12 @@
           <div class="sidebar__header">
             {{ content_for_logo }}
           </div>
-          <div class="sidebar__content">
+          <div class="sidebar__content {% if hasPawPatrolStoreFrontRequest %} paw-patrol-sidebar {% endif %}">
             {{ content_for_order_summary }}
-          </div>
+          </div> 
         </aside>
       </div>
     </div>
-
     {{ tracking_code }}
     <script>      
       var checkoutStep = Shopify.Checkout.step;
@@ -70,7 +143,7 @@
       				$(this).remove();
       			}
       		}		
-      	})
+      	}) 
       }
       $("#checkout_shipping_address_country option").each(function() {                
         if(country[1] != $(this).attr("data-code")){
@@ -80,8 +153,13 @@
       setTimeout (function(){
         $("#checkout_shipping_address_country option[data-code='" +country[1] + "']").prop("selected",true);
       }, 500);
-console.log(checkoutStep);
+
       if(checkoutStep == "contact_information"){
+        let hasStoreFront = $("#storefrontReq").val();
+        if(hasStoreFront == 'true') {
+          $("#continue_button").parent('.step__footer').addClass('paw-footer');
+          $("#continue_button").before('<div class="paw-footer-return"><a class="storefront-return" href="{{ pawPatrolSiteLink }}/cart">Return to cart</a></div>');
+        }
         $("#continue_button").click(function(){
           $(".shopifyInformationError").remove();
           var flagReturn = true;
@@ -100,7 +178,14 @@ console.log(checkoutStep);
             }
           }          
         });
+      } else {
+        let hasStoreFront = $("#storefrontReq").val();
+        if(hasStoreFront == 'true') {
+          $(".storefront-return").remove();
+          $("#continue_button").parent('.step__footer').removeClass('paw-footer');
+        }
       }
+      
     </script>
   </body>
 </html>
