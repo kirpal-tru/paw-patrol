@@ -8,7 +8,7 @@
 {% comment %} END {% endcomment %}
 
 {% if hasPawPatrolStoreFrontRequest %}
-  {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/1vEp5ukuVUlmYvQJO7eBW7/171bdcd868b3f8270583fe123cbb32b1/Logo.svg' %}
+  {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
   {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com' %}
 {% endif %}
     
@@ -33,23 +33,40 @@
        <script>
          (function($) {
             $(document).on("page:load page:change", function() {
+
+               let checkoutStep = Shopify.Checkout.step;
+               if(checkoutStep == "contact_information"){
+                 $("#continue_button").parent('.step__footer').addClass('paw-footer');
+                 $("#continue_button").before('<div class="paw-footer-return"><a class="storefront-return" href="{{ pawPatrolSiteLink }}/cart">Return to cart</a></div>');
+               } else {
+                 $(".storefront-return").remove();
+                 $("#continue_button").parent('.step__footer').removeClass('paw-footer');
+               }  
+              
                const element = $("#checkout_shipping_address_country").closest('div').find('label');
+              
                const textToReplace = element.text();
                const newText = textToReplace.replace("/", " / ");
                element.text(newText); 
                
                $("#checkout_remember_me").closest('.field--show-floating-label').hide();
                $("#checkout_buyer_accepts_marketing").closest('div').next('label').text('Keep me up to date on news and exclusive offers');
-    
+
                var $element = $('main .step');
                var dataValue = $element.data('step');
-      
+              
+               if (dataValue === 'stock_problems') {
+                 $("#continue_button").parent('.step__footer').addClass('paw-footer');
+                 $("#continue_button").before('<div class="paw-footer-return"><a class="storefront-return" href="{{ pawPatrolSiteLink }}/cart">Return to cart</a></div>');
+                 $("#continue_button, .product__status--sold-out, .product__status--reduced").hide();
+               }
+              
                if (dataValue === 'thank_you') {
-                $element.addClass('step-thank-you');
-                $(".section:first form").hide();
-                $(".content-box:first, .step__footer").hide();
-                $("#main-header").after('<span class="main_header_cus_text">You’ll receive a confirmation email with your order number shortly.</span>')
-                $(".step__footer").after('<div class="thankyou_step__footer"><p class="step__footer__info step__footer_thankyou"><a class="need-help" data-contact-us-link="true" href="mailto:MichaelD@spinmaster.com">Need help?</a></p><a href="{{ pawPatrolSiteLink }}/shop" class="btn">Continue shopping</></div>')
+                 $element.addClass('step-thank-you');
+                 $(".section:first form").hide();
+                 $(".content-box:first, .step__footer").hide();
+                 $("#main-header").after('<span class="main_header_cus_text">You’ll receive a confirmation email with your order number shortly.</span>')
+                 $(".step__footer").after('<div class="thankyou_step__footer"><p class="step__footer__info step__footer_thankyou"><a class="need-help" data-contact-us-link="true" href="mailto:MichaelD@spinmaster.com">Need help?</a></p><a href="{{ pawPatrolSiteLink }}/shop" class="btn">Continue shopping</></div>')
                 
                 const targetElement = $('h2').filter(function() {
                   return $.trim($(this).text()) === 'Order details';
@@ -59,10 +76,10 @@
                 targetElement.text(repText);
                  
                } else {
-                $element.removeClass('step-thank-you');
-                $(".section:first form").show();
-                $(".content-box:first, .step__footer").show();
-                $(".main_header_cus_text, .thankyou_step__footer").remove();
+                 $element.removeClass('step-thank-you');
+                 $(".section:first form").show();
+                 $(".content-box:first, .step__footer").show();
+                 $(".main_header_cus_text, .thankyou_step__footer").remove();
                }
             });
           })(Checkout.$);
@@ -155,11 +172,6 @@
       }, 500);
 
       if(checkoutStep == "contact_information"){
-        let hasStoreFront = $("#storefrontReq").val();
-        if(hasStoreFront == 'true') {
-          $("#continue_button").parent('.step__footer').addClass('paw-footer');
-          $("#continue_button").before('<div class="paw-footer-return"><a class="storefront-return" href="{{ pawPatrolSiteLink }}/cart">Return to cart</a></div>');
-        }
         $("#continue_button").click(function(){
           $(".shopifyInformationError").remove();
           var flagReturn = true;
@@ -178,13 +190,7 @@
             }
           }          
         });
-      } else {
-        let hasStoreFront = $("#storefrontReq").val();
-        if(hasStoreFront == 'true') {
-          $(".storefront-return").remove();
-          $("#continue_button").parent('.step__footer').removeClass('paw-footer');
-        }
-      }
+      } else { }
       
     </script>
   </body>
