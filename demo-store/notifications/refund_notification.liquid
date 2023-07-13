@@ -10,8 +10,12 @@
 {% if hasPawPatrolStoreFrontRequest %}
   {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
   {% assign shopURL = pawPatrolSiteLink %}
+  {% assign shopName = 'PAW Patrol' %}
+  {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
 {% else %}
   {% assign shopURL = shop.url %}
+  {% assign shopName = shop.name %}
+  {% assign shopLogo = shop.email_logo_url %}
 {% endif %}
 
 {% if refund_line_items.size == item_count %}
@@ -53,10 +57,10 @@
                 <tr>
                   <td class="shop-name__cell">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shopURL}}">{{ shop.name }}</a>
+                        <a href="{{shopURL}}">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
