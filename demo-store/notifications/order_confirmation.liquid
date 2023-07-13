@@ -11,9 +11,11 @@
   {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
   {% assign shopURL = pawPatrolSiteLink %}
   {% assign orderStatusURL = pawPatrolSiteLink | append: "/account/orders" %}
+  {% assign shopName = 'PAW Patrol' %}
 {% else %}
-{% assign shopURL = shop.url %}
-{% assign orderStatusURL = order_status_url %}
+  {% assign shopURL = shop.url %}
+  {% assign orderStatusURL = order_status_url %}
+  {% assign shopName = shop.name %}
 {% endif %}
 
 {% capture email_title %}
@@ -95,10 +97,10 @@
                 <tr>
                   <td class="shop-name__cell">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shop.email_logo_url}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shopURL}}">{{ shop.name }}</a>
+                        <a href="{{shopURL}}">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -699,5 +701,4 @@
     </table>
   </body>
 </html>
-
 
