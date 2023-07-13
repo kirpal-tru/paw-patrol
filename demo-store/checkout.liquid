@@ -9,12 +9,19 @@
 
 {% if hasPawPatrolStoreFrontRequest %}
   {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
-  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com' %}
+  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
 {% endif %}
     
 <!DOCTYPE html>
 <html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
   <head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWVHZXG');</script>
+ 
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
@@ -27,10 +34,20 @@
     {{ checkout_stylesheets }}
     {{ checkout_scripts }}
 
+
     <script src="{{ 'jquery.min.js' | asset_url }}"></script>
     {% if hasPawPatrolStoreFrontRequest %}
        {{ 'paw-patrol-style.css' | asset_url | stylesheet_tag }}
        <script>
+          function getQueryStringParameter(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            var results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+          }
          (function($) {
             $(document).on("page:load page:change", function() {
 
@@ -66,7 +83,7 @@
                  $(".section:first form").hide();
                  $(".content-box:first, .step__footer").hide();
                  $("#main-header").after('<span class="main_header_cus_text">You’ll receive a confirmation email with your order number shortly.</span>')
-                 $(".step__footer").after('<div class="thankyou_step__footer"><p class="step__footer__info step__footer_thankyou"><a class="need-help" data-contact-us-link="true" href="mailto:MichaelD@spinmaster.com">Need help?</a></p><a href="{{ pawPatrolSiteLink }}/shop" class="btn">Continue shopping</></div>')
+                 $(".step__footer").after('<div class="thankyou_step__footer"><p class="step__footer__info step__footer_thankyou"><a class="need-help" data-contact-us-link="true" href="mailto:MichaelD@spinmaster.com">Need help?</a></p><a href="{{ pawPatrolSiteLink }}/category?revalidate=true" class="btn">Continue shopping</></div>')
                 
                 const targetElement = $('h2').filter(function() {
                   return $.trim($(this).text()) === 'Order details';
@@ -81,6 +98,12 @@
                  $(".content-box:first, .step__footer").show();
                  $(".main_header_cus_text, .thankyou_step__footer").remove();
                }
+
+              var getQueryString = getQueryStringParameter('cm');
+              if(getQueryString !== null) {
+                var decode = atob(getQueryString);
+                $('#checkout_email').val(decode);
+              }
             });
           })(Checkout.$);
          
@@ -89,13 +112,10 @@
   
   </head>
   <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWVHZXG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     {{ skip_to_content_link }}
-    
-    {% if hasPawPatrolStoreFrontRequest %}
-       <input type="hidden" id="storefrontReq" name="storefront_req" value="true"> 
-     {% else %}
-       <input type="hidden" id="storefrontReq" name="storefront_req" value="false"> 
-     {% endif %}
+ 
         
     <header class="banner" data-header role="banner">
       <div class="wrap">
