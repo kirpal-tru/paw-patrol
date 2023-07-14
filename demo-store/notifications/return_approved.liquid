@@ -1,3 +1,12 @@
+{% comment %} We added this check to find from where user comes and change the LOGO, Display None some fields and all that {% endcomment %}
+  {% assign hasPawPatrolStoreFrontRequest = false %}
+  {% for attribute in attributes %}
+    {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
+      {% assign hasPawPatrolStoreFrontRequest = true %}
+    {% endif %}
+  {% endfor %}
+{% comment %} END {% endcomment %}
+
 <!DOCTYPE html>
 <html lang="en">
 {%- assign return_delivery_first = return.deliveries | first -%}
@@ -9,6 +18,20 @@
 {% else %}
   {%- assign order_details_url = order.order_status_url -%}
 {% endif %}
+
+{% if hasPawPatrolStoreFrontRequest %}
+  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
+  {% assign shopURL = pawPatrolSiteLink %}
+  {% assign shopName = 'PAW Patrol' %}
+  {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
+  {% assign orderDetailsURL = shopURL | append: "/account/orders" %}
+{% else %}
+  {% assign shopURL = shop.url %}
+  {% assign shopName = shop.name %}
+  {% assign shopLogo = shop.email_logo_url %}
+  {% assign orderDetailsURL = order_details_url %}
+{% endif %}
+
 <head>
   <title>{{ email_title }}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -37,10 +60,10 @@
                 <tr>
                   <td class="shop-name__cell">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shop.url}}">{{ shop.name }}</a>
+                        <a href="{{shopURL}}">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -109,7 +132,7 @@
       </table>
       <table class="actions__cell">
         <tr>
-          <td class="button__cell"><a href="{{ order_details_url }}" class="button__text return__main-button">View your order</a></td>
+          <td class="button__cell"><a href="{{ orderDetailsURL }}" class="button__text return__main-button">View your order</a></td>
         </tr>
       </table>
     </td>
@@ -125,7 +148,7 @@
     <td class="actions__cell">
       <table class="button main-action-cell">
         <tr>
-          <td class="button__cell"><a href="{{ order_details_url }}" class="button__text">View your order</a></td>
+          <td class="button__cell"><a href="{{ orderDetailsURL }}" class="button__text">View your order</a></td>
         </tr>
       </table>
     </td>
