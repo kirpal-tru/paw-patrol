@@ -1,5 +1,21 @@
+{% if customer.tags contains 'pawpatrol_request' %}
+  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
+  {% assign shopURL = pawPatrolSiteLink %}
+  {% assign shopName = 'PAW Patrol' %}
+  {% assign URL = shop.url | append: "/account/reset" %}
+  {% assign conURL = pawPatrolSiteLink | append: "/reset-password?reset=" %}
+  {% assign resetURL = customer.reset_password_url | replace: URL, conURL %}
+  {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
+
+{% else %}
+  {% assign shopURL = shop.url %}
+  {% assign shopName = shop.name %}
+  {% assign resetURL = customer.reset_password_url %} 
+  {% assign shopLogo = shop.email_logo_url %}
+{% endif %}
+
 {% capture email_title %}Reset your password{% endcapture %}
-{% capture email_body %}Follow this link to reset your customer account password at <a href="{{shop.url}}">{{shop.name}}</a>. If you didn't request a new password, you can safely delete this email.{% endcapture %}
+{% capture email_body %}Follow this link to reset your customer account password at <a href="{{shopURL}}">{{shopName}}</a>. If you didn't request a new password, you can safely delete this email.{% endcapture %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,10 +47,10 @@
                 <tr>
                   <td class="shop-name__cell">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shop.url}}">{{ shop.name }}</a>
+                        <a href="{{shopURL}}">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -69,13 +85,13 @@
     <td class="actions__cell">
       <table class="button main-action-cell">
         <tr>
-          <td class="button__cell"><a href="{{ customer.reset_password_url }}" class="button__text">Reset your password</a></td>
+          <td class="button__cell"><a href="{{ resetURL }}" class="button__text">Reset your password</a></td>
         </tr>
       </table>
       {% if shop.url %}
     <table class="link secondary-action-cell">
       <tr>
-        <td class="link__cell">or <a href="{{ shop.url }}">Visit our store</a></td>
+        <td class="link__cell">or <a href="{{ shopURL }}">Visit our store</a></td>
       </tr>
     </table>
 {% endif %}
@@ -102,12 +118,12 @@
               
               <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{{ shop.email }}</a></p>
             </td>
-          </tr>
+          </tr> 
         </table>
       </center>
     </td>
   </tr>
-</table>
+</table> 
 
 <img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
 
