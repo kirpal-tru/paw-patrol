@@ -1,8 +1,12 @@
 {% comment %} We added this check to find from where user comes and change the LOGO, Display None some fields and all that {% endcomment %}
   {% assign hasPawPatrolStoreFrontRequest = false %}
+  {% assign dynamicURL = shop.url %}
   {% for attribute in attributes %}
     {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
       {% assign hasPawPatrolStoreFrontRequest = true %}
+    {% endif %}
+    {% if attribute.first == 'pawpatrolurl' %}
+      {% assign dynamicURL = attribute.last %}
     {% endif %}
   {% endfor %}
 {% comment %} END {% endcomment %}
@@ -20,7 +24,7 @@
 {% endif %}
 
 {% if hasPawPatrolStoreFrontRequest %}
-  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
+  {% assign pawPatrolSiteLink = dynamicURL %}
   {% assign shopURL = pawPatrolSiteLink %}
   {% assign shopName = 'PAW Patrol' %}
   {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
