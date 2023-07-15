@@ -1,6 +1,6 @@
 {% if customer.tags contains 'pawpatrol_user' %}
-  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
-  {% assign shopURL = pawPatrolSiteLink %}
+  {% assign dynamicURL = customer.metafields.customer.registration_url %} 
+  {% assign shopURL = dynamicURL %}
   {% assign shopName = 'PAW Patrol' %}
   {% assign shopLink = shopURL | append: "/login" %}
   {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
