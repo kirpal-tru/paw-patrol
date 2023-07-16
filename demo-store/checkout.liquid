@@ -1,6 +1,7 @@
 {% comment %} We added this check to find from where user come and change the LOGO, Display None some fields and all that {% endcomment %}
   {% assign hasPawPatrolStoreFrontRequest = false %}
   {% for attribute in checkout.attributes %}
+   
     {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
       {% assign hasPawPatrolStoreFrontRequest = true %}
     {% endif %} 
@@ -211,7 +212,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }          
         });
       } else { }
-      
+
     </script>
+     <script>
+    jQuery( document ).ready(function() {
+      var current_url = window.location.href;
+      var discount = current_url.split('?')[1];
+      if(discount!=undefined){
+        var url =   jQuery("a.storefront-return").attr('href');
+        jQuery("a.storefront-return").attr('href',url+'?'+discount);
+      }else{
+        var code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
+       // if (code !== '' && code !== undefined) {
+          var url =   jQuery("a.storefront-return").attr('href');
+           jQuery("a.storefront-return").attr('href',url+'?discount='+encodeURI(code));
+        // }
+      }
+     jQuery(document).on('click', '#checkout_submit', function(event) {
+       event.stopPropagation();
+        var coupon_code = jQuery('#checkout_reduction_code').val();
+        var href = jQuery('.storefront-return').attr('href');
+        var myString = href.substring(0, href.indexOf('?'));
+       var current_url = window.location.href;
+        var str = current_url.replace(/\?.*/, '');
+        var final_url =str+'?discount=' + encodeURI(coupon_code);
+        window.history.pushState(null,null,final_url);
+       const myTimeout = setTimeout(function() {
+        var myString = href.substring(0, href.indexOf('?'));
+         var latest_url = myString + '?discount=' + encodeURI(coupon_code);
+          jQuery("a.storefront-return").attr("href",latest_url);
+        }, 2000);
+      });
+     jQuery(document).on('click', '.tag__button .icon-svg', function(event) {
+       
+        event.stopPropagation();
+        var current_url = window.location.href;
+        var test = current_url.substring(0, current_url.indexOf('?'));
+        window.history.pushState(null,null,test);
+        var return_url = jQuery("a.storefront-return").attr("href",url);
+      
+         var final_return_url = current_url.substring(0, current_url.indexOf('='));
+      
+        var url =  jQuery("a.storefront-return").attr("href");
+            // console.log(url);
+         jQuery("a.storefront-return").attr("href",url+'?discount=');
+          const myTimeouts = setTimeout(function() {
+          
+            var url =  jQuery("a.storefront-return").attr("href");
+          
+         jQuery("a.storefront-return").attr("href",url+'?discount=');
+        }, 3000);
+       
+       });
+    });
+</script>
   </body>
 </html>
