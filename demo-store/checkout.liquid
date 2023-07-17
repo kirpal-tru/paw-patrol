@@ -228,11 +228,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       } else { }
 
     </script>
-     <script>
+    
+  <script>
     jQuery( document ).ready(function() {
       var current_url = window.location.href;
       var discount = current_url.split('?')[1];
-      if(discount!=undefined){
+      // console.log(discount);
+      // console.log(current_url);
+        // step=contact_information
+      if(discount=='step=contact_information'){
+            var front_code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
+        var cart_url = jQuery('a.storefront-return').attr('href');
+      console.log('cart_url');
+         var cart_urls = cart_url+'?discount='+front_code;
+        console.log(cart_urls);
+         // var updatedUrl = cart_urls.replace('?step=contact_information', '');
+           jQuery(".paw-footer-return a.storefront-return").attr('href',cart_urls);
+        // var discount = current_url.split('?')[1];
+           
+          // var final_url =current_url+'?discount=' + encodeURI(front_code);
+        // window.history.pushState(null,null,final_url);
+      }else{
+        if(discount!=undefined){
         var url =   jQuery("a.storefront-return").attr('href');
         jQuery("a.storefront-return").attr('href',url+'?'+discount);
       }else{
@@ -242,10 +259,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
            jQuery("a.storefront-return").attr('href',url+'?discount='+encodeURI(code));
         // }
       }
+      }
+      
+    
+  
      jQuery(document).on('click', '#checkout_submit', function(event) {
        event.stopPropagation();
         var coupon_code = jQuery('#checkout_reduction_code').val();
-     //  console.log(coupon_code);
+       console.log(coupon_code);
         var href = jQuery('.storefront-return').attr('href');
         // var myString = href.substring(0, href.indexOf('?'));
        var current_url = window.location.href;
@@ -253,19 +274,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         var final_url =str+'?discount=' + encodeURI(coupon_code);
         window.history.pushState(null,null,final_url);
        const myTimeout = setTimeout(function() {
-       //  console.log(href);
+         console.log(href);
          if(href!=undefined){
              var myString = href.substring(0, href.indexOf('?'));
              var latest_url = myString + '?discount=' + encodeURI(coupon_code);
            jQuery("a.storefront-return").attr("href",latest_url);
          }
-       
+         var store_footer_url = jQuery('.step__footer__previous-link').attr("href");
+          console.log(store_footer_url);
+       jQuery('.step__footer__previous-link').attr("href",store_footer_url+'?discount=' + encodeURI(coupon_code));
          // console.log(strore_footer_url)
          // step__footer__previous-link
         }, 2000);
          var store_footer_url = jQuery('.step__footer__previous-link').attr("href");
-       //   console.log(store_footer_url);
+          console.log(store_footer_url+'?discount=' + encodeURI(coupon_code));
        jQuery('.step__footer__previous-link').attr("href",store_footer_url+'?discount=' + encodeURI(coupon_code));
+        var store_url = jQuery("a.storefront-return").attr("href");
+      console.log(store_url);
       });
      jQuery(document).on('click', '.tag__button .icon-svg', function(event) {
        
@@ -291,6 +316,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        });
     });
 </script>
+
 <!--     <script>
     jQuery( document ).ready(function() {
         jQuery(document).on('click', '#checkout_reduction_code', function(event) {
