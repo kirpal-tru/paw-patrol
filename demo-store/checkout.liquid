@@ -1,16 +1,30 @@
 {% comment %} We added this check to find from where user come and change the LOGO, Display None some fields and all that {% endcomment %}
   {% assign hasPawPatrolStoreFrontRequest = false %}
-  {% for attribute in checkout.attributes %}
-   
-    {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
+  {% if order.id != blank %} 
+    {% for attribute in order.attributes %}
+     {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
       {% assign hasPawPatrolStoreFrontRequest = true %}
-    {% endif %} 
-  {% endfor %}
+     {% endif %} 
+     {% if attribute.first == 'pawpatrolurl' %} 
+      {% assign dynamicURL = attribute.last %}
+     {% endif %} 
+    {% endfor %}
+  {% else %}
+    {% for attribute in checkout.attributes %}
+     {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
+      {% assign hasPawPatrolStoreFrontRequest = true %}
+     {% endif %}
+     {% if attribute.first == 'pawpatrolurl' %} 
+      {% assign dynamicURL = attribute.last %}
+     {% endif %} 
+    {% endfor %}
+  {% endif %}
+  
 {% comment %} END {% endcomment %}
 
 {% if hasPawPatrolStoreFrontRequest %}
   {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
-  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
+  {% assign pawPatrolSiteLink = dynamicURL %}
 {% endif %}
     
 <!DOCTYPE html>
@@ -72,7 +86,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                var $element = $('main .step');
                var dataValue = $element.data('step');
-              
+               
                if (dataValue === 'stock_problems') {
                  $("#continue_button").parent('.step__footer').addClass('paw-footer');
                  $("#continue_button").before('<div class="paw-footer-return"><a class="storefront-return" href="{{ pawPatrolSiteLink }}/cart">Return to cart</a></div>');
