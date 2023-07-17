@@ -5,15 +5,12 @@
     {% if attribute.first == 'pawpatrol' and attribute.last == 'storefront'%}
       {% assign hasPawPatrolStoreFrontRequest = true %}
     {% endif %} 
-    {% if attribute.first == 'pawpatrolurl' %} 
-      {% assign dynamicURL = attribute.last %}
-    {% endif %}
   {% endfor %}
 {% comment %} END {% endcomment %}
 
 {% if hasPawPatrolStoreFrontRequest %}
   {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
-  {% assign pawPatrolSiteLink = dynamicURL %}
+  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
 {% endif %}
     
 <!DOCTYPE html>
@@ -234,17 +231,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      jQuery(document).on('click', '#checkout_submit', function(event) {
        event.stopPropagation();
         var coupon_code = jQuery('#checkout_reduction_code').val();
+     //  console.log(coupon_code);
         var href = jQuery('.storefront-return').attr('href');
-        var myString = href.substring(0, href.indexOf('?'));
+        // var myString = href.substring(0, href.indexOf('?'));
        var current_url = window.location.href;
         var str = current_url.replace(/\?.*/, '');
         var final_url =str+'?discount=' + encodeURI(coupon_code);
         window.history.pushState(null,null,final_url);
        const myTimeout = setTimeout(function() {
-        var myString = href.substring(0, href.indexOf('?'));
-         var latest_url = myString + '?discount=' + encodeURI(coupon_code);
-          jQuery("a.storefront-return").attr("href",latest_url);
+       //  console.log(href);
+         if(href!=undefined){
+             var myString = href.substring(0, href.indexOf('?'));
+             var latest_url = myString + '?discount=' + encodeURI(coupon_code);
+           jQuery("a.storefront-return").attr("href",latest_url);
+         }
+       
+         // console.log(strore_footer_url)
+         // step__footer__previous-link
         }, 2000);
+         var store_footer_url = jQuery('.step__footer__previous-link').attr("href");
+       //   console.log(store_footer_url);
+       jQuery('.step__footer__previous-link').attr("href",store_footer_url+'?discount=' + encodeURI(coupon_code));
       });
      jQuery(document).on('click', '.tag__button .icon-svg', function(event) {
        
@@ -264,10 +271,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             var url =  jQuery("a.storefront-return").attr("href");
           
          jQuery("a.storefront-return").attr("href",url+'?discount=');
+            // step__footer__previous-link
         }, 3000);
        
        });
     });
 </script>
+<!--     <script>
+    jQuery( document ).ready(function() {
+        jQuery(document).on('click', '#checkout_reduction_code', function(event) {
+       event.stopPropagation();
+        var coupon_code = jQuery('#checkout_reduction_code').val();
+        var href = jQuery('.storefront-return').attr('href');
+        var myString = href.substring(0, href.indexOf('?'));
+       var current_url = window.location.href;
+        var str = current_url.replace(/\?.*/, '');
+      var current_url = window.location.href;
+        });
+    });
+      </script> -->
+    <style>
+      body{
+        overflow:auto!important;
+      }
+    </style>
   </body>
 </html>
