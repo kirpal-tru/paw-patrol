@@ -14,7 +14,12 @@
 {% if hasPawPatrolStoreFrontRequest %}
   {% assign pawPatrolSiteLink = dynamicURL %}
   {% assign shopURL = pawPatrolSiteLink %}
-  {% assign orderStatusURL = pawPatrolSiteLink | append: "/account/orders" %}
+  {% if customer.tags contains 'pawpatrol_user' %}
+    {% assign orderURL = pawPatrolSiteLink | append: "/account/orders/" %}
+    {% assign orderStatusURL = orderURL | append: order_number %}
+  {% else %}
+    {% assign orderStatusURL = order_status_url %}
+  {% endif %}
   {% assign shopName = 'PAW Patrol' %}
   {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
 {% else %}
