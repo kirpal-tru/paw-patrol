@@ -66,6 +66,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
          (function($) {
             $(document).on("page:load page:change", function() {
 
+               $(".cart__breadcrumb").remove();
+               $(".main__header .breadcrumb").prepend('<li class="cart__breadcrumb breadcrumb__item breadcrumb__item--completed"><a class="breadcrumb__link" href="{{ pawPatrolSiteLink }}/cart">Cart</a><svg class="icon-svg icon-svg--color-adaptive-light icon-svg--size-10 breadcrumb__chevron-icon" aria-hidden="true" focusable="false"> <use xlink:href="#chevron-right"></use> </svg></li>');
+
                let checkoutStep = Shopify.Checkout.step;
                if(checkoutStep == "contact_information"){
                  $("#continue_button").parent('.step__footer').addClass('paw-footer');
