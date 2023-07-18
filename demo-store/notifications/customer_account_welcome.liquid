@@ -1,6 +1,14 @@
-{% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
-{% assign shopName = 'PAW Patrol' %}
-{% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
+{% if customer.tags contains 'spinmaster_user' %}
+  {% assign shopURL  = shop.url %}
+  {% assign shopName = shop.name %}
+  {% assign shopLogo = shop.email_logo_url %}
+
+{% else %}
+  {% assign shopURL  = customer.metafields.customer.registration_url %}
+  {% assign shopName = 'PAW Patrol' %}
+  {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
+
+{% endif %}
 
 {% capture email_title %}Welcome to {{ shopName }}!{% endcapture %}
 {% capture email_body %}You've activated your customer account. Next time you shop with us, log in for faster checkout.{% endcapture %}
@@ -38,7 +46,7 @@
                       <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{pawPatrolSiteLink}}">{{ shopName }}</a>
+                        <a href="{{shopURL}}">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -71,7 +79,7 @@
                   <td class="actions__cell">
                     <table class="button main-action-cell">
                       <tr>
-                        <td class="button__cell"><a href="{{ pawPatrolSiteLink }}" class="button__text">Visit our store</a></td>
+                        <td class="button__cell"><a href="{{ shopURL }}" class="button__text">Visit our store</a></td>
                       </tr>
                     </table>
                   </td>
@@ -107,6 +115,10 @@
 
         </td>
       </tr>
-    </table>
+    </table> <div style="display:none"> Customer: 
+    {% if customer.tags contains 'spinmaster_user' %}
+     Spin Master
+    {% endif %}
+</div> 
   </body>
 </html>
