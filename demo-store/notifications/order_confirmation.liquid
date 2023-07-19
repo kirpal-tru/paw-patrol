@@ -16,7 +16,7 @@
   {% assign shopURL = pawPatrolSiteLink %}
   {% if customer.tags contains 'pawpatrol_user' %}
     {% assign orderURL = pawPatrolSiteLink | append: "/account/orders/" %}
-    {% assign orderStatusURL = orderURL | append: order_number %}
+    {% assign orderStatusURL = orderURL | append: id %}
   {% else %}
     {% assign orderStatusURL = order_status_url %}
   {% endif %}
