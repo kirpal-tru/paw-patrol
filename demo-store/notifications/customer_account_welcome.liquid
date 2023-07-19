@@ -46,7 +46,7 @@
                       <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shopURL}}">{{ shopName }}</a>
+                        <a href="{{shopURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=entry&utm_content=visit_our_store&utm_term=body">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -79,7 +79,7 @@
                   <td class="actions__cell">
                     <table class="button main-action-cell">
                       <tr>
-                        <td class="button__cell"><a href="{{ shopURL }}" class="button__text">Visit our store</a></td>
+                        <td class="button__cell"><a href="{{ shopURL }}?utm_source=automated_email&utm_medium=email&utm_campaign=entry&utm_content=visit_our_store&utm_term=body" class="button__text">Visit our store</a></td>
                       </tr>
                     </table>
                   </td>
