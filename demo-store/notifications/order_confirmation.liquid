@@ -190,13 +190,13 @@
     <td class="actions__cell">
       <table class="button main-action-cell">
         <tr>
-          <td class="button__cell"><a href="{{orderStatusURL}}" class="button__text">View your order</a></td>
+          <td class="button__cell"><a href="{{orderStatusURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_your_order&utm_term=body" class="button__text">View your order</a></td>
         </tr>
       </table>
       {% if shop.url %}
     <table class="link secondary-action-cell">
       <tr>
-        <td class="link__cell">or <a href="{{shopURL}}">Visit our store</a>
+        <td class="link__cell">or <a href="{{shopURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_store&utm_term=body">Visit our store</a>
         </td>
       </tr>
     </table> 
@@ -213,7 +213,7 @@
         <td class="actions__cell">
           <table class="button main-action-cell">
             <tr>
-              <td class="button__cell"><a href="{{shopURL}}" class="button__text">Visit our store</a></td>
+              <td class="button__cell"><a href="{{shopURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_store&utm_term=body" class="button__text">Visit our store</a></td>
             </tr>
           </table>
         </td>
