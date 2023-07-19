@@ -1,16 +1,18 @@
 {% if customer.tags contains 'pawpatrol_request' %}
-  {% assign pawPatrolSiteLink = 'http://ec2-35-183-76-131.ca-central-1.compute.amazonaws.com/shop' %}
+  {% assign pawPatrolSiteLink = customer.metafields.customer.account_reset_url %}
   {% assign shopURL = pawPatrolSiteLink %}
   {% assign shopName = 'PAW Patrol' %}
   {% assign URL = shop.url | append: "/account/reset" %}
   {% assign conURL = pawPatrolSiteLink | append: "/reset-password?reset=" %}
-  {% assign resetURL = customer.reset_password_url | replace: URL, conURL %}
+  {% assign conURLs = customer.reset_password_url | replace: URL, conURL %}
+  {% assign resetURL = conURLs | append: "&utm_source=automated_email&utm_medium=email&utm_campaign=reset_password&utm_content=reset_password&utm_term=body" %}
   {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
 
 {% else %}
   {% assign shopURL = shop.url %}
   {% assign shopName = shop.name %}
-  {% assign resetURL = customer.reset_password_url %} 
+  {% assign conURLs = customer.reset_password_url %}
+  {% assign resetURL = conURLs | append: "?utm_source=automated_email&utm_medium=email&utm_campaign=reset_password&utm_content=reset_password&utm_term=body" %} 
   {% assign shopLogo = shop.email_logo_url %}
 {% endif %}
 
@@ -50,7 +52,7 @@
                       <img src="{{shopLogo}}" alt="{{ shopName }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
                       <h1 class="shop-name__text">
-                        <a href="{{shopURL}}">{{ shopName }}</a>
+                        <a href="{{shopURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=reset_password&utm_content=visit_store&utm_term=body">{{ shopName }}</a>
                       </h1>
                     {%- endif %}
                   </td>
@@ -91,7 +93,7 @@
       {% if shop.url %}
     <table class="link secondary-action-cell">
       <tr>
-        <td class="link__cell">or <a href="{{ shopURL }}">Visit our store</a></td>
+        <td class="link__cell">or <a href="{{ shopURL }}?utm_source=automated_email&utm_medium=email&utm_campaign=reset_password&utm_content=visit_store&utm_term=body">Visit our store</a></td>
       </tr>
     </table>
 {% endif %}
