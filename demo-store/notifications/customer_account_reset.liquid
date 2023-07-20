@@ -17,7 +17,7 @@
 {% endif %}
 
 {% capture email_title %}Reset your password{% endcapture %}
-{% capture email_body %}Follow this link to reset your customer account password at <a href="{{shopURL}}">{{shopName}}</a>. If you didn't request a new password, you can safely delete this email.{% endcapture %}
+{% capture email_body %}Follow this link to reset your customer account password at <a href="{{shopURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=reset_password&utm_content=visit_store&utm_term=body">{{shopName}}</a>. If you didn't request a new password, you can safely delete this email.{% endcapture %}
 
 <!DOCTYPE html>
 <html lang="en">
