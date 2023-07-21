@@ -23,20 +23,44 @@
 {% comment %} END {% endcomment %}
 
 {% if hasPawPatrolStoreFrontRequest %}
-  {% assign pawPatrolLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
+
+{% assign min = 65 %}
+{% assign max = 80 %}
+{% assign diff = max | minus: min %}
+{% assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min %}
+  
+  {% assign pawPatrolLogo = 'https://cdn.shopify.com/s/files/1/0614/8030/4885/files/main-site-logo.svg?v=' | append: randomNumber%}
+  
   {% assign pawPatrolSiteLink = dynamicURL %}
 {% endif %}
     
 <!DOCTYPE html>
 <html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <input id="dis1" type="hidden" name="dis1" value="" />
   <head>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NWVHZXG');</script>
- 
-
+    
+  {% if hasPawPatrolStoreFrontRequest %}
+    
+       <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NWVHZXG');</script>
+      <!-- End Google Tag Manager -->
+    
+    {% else %}
+    
+    <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MTN9TKNR');</script>
+    <!-- End Google Tag Manager -->
+    
+  {% endif %}
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
@@ -48,7 +72,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     {{ checkout_stylesheets }}
     {{ checkout_scripts }}
-
 
     <script src="{{ 'jquery.min.js' | asset_url }}"></script>
     {% if hasPawPatrolStoreFrontRequest %}
@@ -130,10 +153,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   
   </head>
   <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWVHZXG"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+  {% if hasPawPatrolStoreFrontRequest %}
+    
+    <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWVHZXG"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+  {% else %}
+    
+    <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTN9TKNR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+  {% endif %}  
+    
     {{ skip_to_content_link }}
- 
         
     <header class="banner" data-header role="banner">
       <div class="wrap">
@@ -211,6 +248,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       if(checkoutStep == "contact_information"){
         $("#continue_button").click(function(){
+           var coupon_code1 = jQuery('#checkout_reduction_code').val();
+        
           $(".shopifyInformationError").remove();
           var flagReturn = true;
           if($("#checkout_shipping_address_zip").val() != ""){
@@ -233,110 +272,86 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </script>
     
   <script>
-    jQuery( document ).ready(function() {
+  jQuery( document ).ready(function() {
+    var t = window.location.href;
+     var isSubstringFound = t.includes("checkouts");
+     if(isSubstringFound==true){
+         jQuery('a.logo.logo--left.paw--logo.paw--logo-main').css('pointer-events', 'none');
+         jQuery('li.cart__breadcrumb.breadcrumb__item').css('pointer-events', 'none');
+     }
       var current_url = window.location.href;
       var discount = current_url.split('?')[1];
-      // console.log(discount);
-      // console.log(current_url);
-        // step=contact_information
-      if(discount=='step=contact_information'){
-            var front_code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
-        var cart_url = jQuery('a.storefront-return').attr('href');
-      console.log('cart_url');
-         var cart_urls = cart_url+'?discount='+front_code;
-        console.log(cart_urls);
-         // var updatedUrl = cart_urls.replace('?step=contact_information', '');
-           jQuery(".paw-footer-return a.storefront-return").attr('href',cart_urls);
-        // var discount = current_url.split('?')[1];
-           
-          // var final_url =current_url+'?discount=' + encodeURI(front_code);
-        // window.history.pushState(null,null,final_url);
-      }else{
-        if(discount!=undefined){
-        var url =   jQuery("a.storefront-return").attr('href');
-        jQuery("a.storefront-return").attr('href',url+'?'+discount);
-      }else{
-        var code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
-       // if (code !== '' && code !== undefined) {
-          var url =   jQuery("a.storefront-return").attr('href');
-           jQuery("a.storefront-return").attr('href',url+'?discount='+encodeURI(code));
-        // }
-      }
-      }
-      
-    
-  
-     jQuery(document).on('click', '#checkout_submit', function(event) {
-       event.stopPropagation();
+      if(discount!=undefined){
+           if(discount=='step=contact_information'){
+              var code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
+              if (code !== '' && code !== undefined) {
+                  var current_url =   jQuery("a.storefront-return").attr('href');
+                  jQuery("a.storefront-return").attr('href',current_url+'?discount='+code);
+              }else{
+                  var current_url =   jQuery("a.storefront-return").attr('href');
+                 var urls = current_url.split('?step')[1];
+                 jQuery("a.storefront-return").attr('href',current_url+'?discount=');
+             }
+            }else{
+                var discount_val = current_url.split('&discount=')[1];
+                var url =   jQuery("a.storefront-return").attr('href');
+               if(discount_val==undefined){
+                jQuery("a.storefront-return").attr('href',url+'?discount=');
+             }else{
+                jQuery("a.storefront-return").attr('href',url+'?discount='+discount_val);
+             }
+            }
+        }else{
+            var code = jQuery('.tag__wrapper .reduction-code .reduction-code__text').text();
+           var url =   jQuery("a.storefront-return").attr('href');
+          jQuery("a.storefront-return").attr('href',url+'?discount=');
+        }
+      jQuery(document).on('click', '#checkout_submit', function(event) {
+        event.stopPropagation();
         var coupon_code = jQuery('#checkout_reduction_code').val();
-       console.log(coupon_code);
         var href = jQuery('.storefront-return').attr('href');
-        // var myString = href.substring(0, href.indexOf('?'));
-       var current_url = window.location.href;
+        var current_url = window.location.href;
         var str = current_url.replace(/\?.*/, '');
         var final_url =str+'?discount=' + encodeURI(coupon_code);
         window.history.pushState(null,null,final_url);
        const myTimeout = setTimeout(function() {
-         console.log(href);
          if(href!=undefined){
-             var myString = href.substring(0, href.indexOf('?'));
-             var latest_url = myString + '?discount=' + encodeURI(coupon_code);
+           var myString = href.substring(0, href.indexOf('?'));
+           var latest_url = myString + '?discount=' + encodeURI(coupon_code);
            jQuery("a.storefront-return").attr("href",latest_url);
          }
-         var store_footer_url = jQuery('.step__footer__previous-link').attr("href");
-          console.log(store_footer_url);
-       jQuery('.step__footer__previous-link').attr("href",store_footer_url+'?discount=' + encodeURI(coupon_code));
-         // console.log(strore_footer_url)
-         // step__footer__previous-link
-        }, 2000);
-         var store_footer_url = jQuery('.step__footer__previous-link').attr("href");
-          console.log(store_footer_url+'?discount=' + encodeURI(coupon_code));
-       jQuery('.step__footer__previous-link').attr("href",store_footer_url+'?discount=' + encodeURI(coupon_code));
-        var store_url = jQuery("a.storefront-return").attr("href");
-      console.log(store_url);
+       }, 3000);
       });
-     jQuery(document).on('click', '.tag__button .icon-svg', function(event) {
-       
-        event.stopPropagation();
+    });
+    jQuery(document).on('click', 'button.tag__button .icon-svg', function(event) {
         var current_url = window.location.href;
         var test = current_url.substring(0, current_url.indexOf('?'));
         window.history.pushState(null,null,test);
         var return_url = jQuery("a.storefront-return").attr("href",url);
-      
-         var final_return_url = current_url.substring(0, current_url.indexOf('='));
-      
+        var final_return_url = current_url.substring(0, current_url.indexOf('='));
         var url =  jQuery("a.storefront-return").attr("href");
-            // console.log(url);
-         jQuery("a.storefront-return").attr("href",url+'?discount=');
+        jQuery("a.storefront-return").attr("href",url+'?discount=');
           const myTimeouts = setTimeout(function() {
-          
-            var url =  jQuery("a.storefront-return").attr("href");
-          
-         jQuery("a.storefront-return").attr("href",url+'?discount=');
-            // step__footer__previous-link
-        }, 3000);
-       
+             var url =  jQuery("a.storefront-return").attr("href");
+            jQuery("a.storefront-return").attr("href",url+'?discount=');
+          }, 4000);
        });
-    });
+</script>
+    
+<script>
+document.addEventListener("DOMContentLoaded", function(event) { 
+  let params = new URL(window.location.href).searchParams;
+  let key1 = params.get('OptanonConsent');
+  let key2 = params.get('OptanonAlertBoxClosed');
+  if(key1 != null){ document.cookie = "OptanonConsent" + "=" + atob(key1); }    
+  if(key2 != null){ document.cookie = "OptanonAlertBoxClosed" + "=" + atob(key2); }  
+});       
 </script>
 
-<!--     <script>
-    jQuery( document ).ready(function() {
-        jQuery(document).on('click', '#checkout_reduction_code', function(event) {
-       event.stopPropagation();
-        var coupon_code = jQuery('#checkout_reduction_code').val();
-        var href = jQuery('.storefront-return').attr('href');
-        var myString = href.substring(0, href.indexOf('?'));
-       var current_url = window.location.href;
-        var str = current_url.replace(/\?.*/, '');
-      var current_url = window.location.href;
-        });
-    });
-      </script> -->
-    <style>
-      body{
-        overflow:auto!important;
-      }
-    </style>
+<style>
+  body{
+    overflow:auto!important;
+  }
+</style>
   </body>
 </html>
