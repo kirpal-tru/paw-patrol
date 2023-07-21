@@ -16,15 +16,16 @@
   {% assign shopURL = pawPatrolSiteLink %}
   {% if customer.tags contains 'pawpatrol_user' %}
     {% assign orderURL = pawPatrolSiteLink | append: "/account/orders/" %}
-    {% assign orderStatusURL = orderURL | append: id %}
+    {% assign oURL = orderURL | append: id %}
+    {% assign orderStatusURL = oURL | append: "?utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_your_order&utm_term=body" %}
   {% else %}
-    {% assign orderStatusURL = order_status_url %}
+    {% assign orderStatusURL = order_status_url | append: "&utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_your_order&utm_term=body" %}
   {% endif %}
   {% assign shopName = 'PAW Patrol' %}
   {% assign shopLogo = 'https://images.ctfassets.net/r3qu44etwf9a/41M8iH0uQzVaSb7lNClpkj/bc64b830a3179a40aec98f25ceff7050/main-logo.svg' %}
 {% else %}
   {% assign shopURL = shop.url %}
-  {% assign orderStatusURL = order_status_url %}
+  {% assign orderStatusURL = order_status_url | append: "&utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_your_order&utm_term=body" %}
   {% assign shopName = shop.name %}
   {% assign shopLogo = shop.email_logo_url %}
 {% endif %}
@@ -190,7 +191,7 @@
     <td class="actions__cell">
       <table class="button main-action-cell">
         <tr>
-          <td class="button__cell"><a href="{{orderStatusURL}}?utm_source=automated_email&utm_medium=email&utm_campaign=order_confirmation&utm_content=visit_your_order&utm_term=body" class="button__text">View your order</a></td>
+          <td class="button__cell"><a href="{{orderStatusURL}}" class="button__text">View your order</a></td>
         </tr>
       </table>
       {% if shop.url %}
