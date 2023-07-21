@@ -270,7 +270,7 @@
       } else { }
 
     </script>
-    
+  {% if hasPawPatrolStoreFrontRequest %}
   <script>
   jQuery( document ).ready(function() {
     var t = window.location.href;
@@ -353,5 +353,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     overflow:auto!important;
   }
 </style>
+    {% endif %}
   </body>
 </html>
